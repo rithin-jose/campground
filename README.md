@@ -2,7 +2,7 @@
 
 # campground
 
-**MEN** (**M**ongo **E**xpress **N**ode)stack backend project for testing purposes .
+**MEN** (**M**ongo **E**xpress **N**ode) stack backend project for testing purposes .
 To View clone the repo and run the command:
 
       npm install
@@ -16,6 +16,6 @@ followed by
 	C:\data\db
 	
 on windows depending on which drive the project is (if its on d drive make D:\data\db ).
-page will be available at ```localhost:3000```
+page will be available at ```localhost:3000``` or ```127.0.0.1:3000```
 
 To automate the server to handle changes use [nodemon](https://www.npmjs.com/package/nodemon)
