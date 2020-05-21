@@ -2,11 +2,16 @@
 
 # campground
 
-**MEN** (**M**ongo **E**xpress **N**ode) stack backend project for testing purposes .
+**MEN** (**M**ongo **E**xpress **N**ode.js) stack backend project for testing purposes.
+
+Prerequisite : 
+You must have mongodb installed on your system.If not you can install it form [here](https://www.mongodb.com/).
+You must have node.js installed on your system.If not you can install it form [here](https://nodejs.org/en/).
+
 To View clone the repo and run the command:
 
       npm install
-      
+
 followed by
 
       node app.js
