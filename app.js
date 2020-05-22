@@ -1,22 +1,18 @@
-var express = require('express');
-var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var express = require('express');
+var app = express();
+
+var Campground = require('./models/campground')
+var seedDB = require('./seeds');
+
+seedDB();
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('public'));
 app.set('view engine','ejs');
 
 mongoose.connect("mongodb://localhost/campground",{useNewUrlParser: true, useUnifiedTopology: true});
-
-//Schema setup
-var campgroundSchema = new mongoose.Schema({
-    name : String,
-    image: String,
-    description: String
-});
-
-var Campground = mongoose.model("Campground", campgroundSchema);
 
 // Campground.create(
 //     {
