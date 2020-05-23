@@ -3,32 +3,15 @@ var mongoose = require('mongoose');
 var express = require('express');
 var app = express();
 
-var Campground = require('./models/campground')
+var Campground = require('./models/campground');
 var seedDB = require('./seeds');
-
-seedDB();
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('public'));
 app.set('view engine','ejs');
+seedDB();
 
 mongoose.connect("mongodb://localhost/campground",{useNewUrlParser: true, useUnifiedTopology: true});
-
-// Campground.create(
-//     {
-//         name:"test",
-//         image:"https://images.pexels.com/photos/699558/pexels-photo-699558.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-//         description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum voluptas et sequi quasi odio non facere nam beatae impedit, veritatis commodi ea nemo assumenda possimus, atque consequatur. Labore, ut odit."
-//     },function(err, campground){
-//         if(err){
-//             console.log("Error");
-//             console.log(err);
-//         }
-//         else{
-//             console.log("New Campground");
-//             console.log(campground);
-//         }
-// });
 
 app.get("/",(req,res) => {
     res.render("homepage");
@@ -76,11 +59,13 @@ app.get("/campgrounds/new",(req,res) => {
 //Show - shows info about one campground
 app.get("/campgrounds/:id",function(req,res){
     //find ground with the id and render show teplate with the details
-    Campground.findById(req.params.id,function(err,foundCampground){
+    Campground.findById(req.params.id).populate("comments").exec(function(err,foundCampground){
         if(err){
             console.log(err);
         }
         else{
+            console.log("found");
+            
             res.render("show",{campground:foundCampground});
         }
     });
