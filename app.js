@@ -34,6 +34,10 @@ app.get("/",(req,res) => {
     res.render("homepage");
 });
 
+// *******************************************************************************
+//                          Campground routes
+// *******************************************************************************
+
 //INDEX - show all campgrounds
 app.get("/campgrounds",(req,res) => {
     Campground.find({},function(err,allCampgrounds){
@@ -127,7 +131,9 @@ app.post("/campgrounds/:id/comments",function(req,res){
     });
 });
 
-//Authentication Routes
+// *******************************************************************************
+//                          Authentication routes
+// *******************************************************************************
 app.get("/register",function(req,res){
     res.render('register');
 });
@@ -140,10 +146,25 @@ app.post("/register",function(req,res){
         passport.authenticate("local")(req,res,function(){
             res.redirect("/campgrounds");
         });
-    });});
+    });
+});
+
+app.get("/login",function(req,res){
+    res.render("login")
+});
+
+app.post("/login",passport.authenticate("local",
+    {
+        successRedirect: "/campgrounds",
+        failureRedirect: "/login"
+    }),function(req,res){
+});
 
 
 
+// *******************************************************************************
+//                          Error routes and port config
+// *******************************************************************************
 
 app.get("*",(req,res) => {
     res.send("404 Page not found");
