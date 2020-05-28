@@ -24,15 +24,21 @@ router.post("/campgrounds/:id/comments",isLoggedIn,function(req,res){
             res.redirect("/campgrounds")
         }
         else{
+           
             //create new comment
             Comment.create(req.body.comment,function(err,comment){
                 if(err){
                     console.log(err); 
                 }
                 else{
+                    comment.author.id = req.user._id;
+                    comment.author.username = req.user.username;
+                    comment.save();
                     //connect new comment to campground
                     campground.comments.push(comment);
                     campground.save();
+                    console.log(comment);
+                    
                     //redirect campground show page
                     res.redirect("/campgrounds/"+campground._id);
                 }
