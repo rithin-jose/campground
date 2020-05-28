@@ -30,6 +30,23 @@ passport.deserializeUser(User.deserializeUser());
 
 mongoose.connect("mongodb://localhost/campground",{useNewUrlParser: true, useUnifiedTopology: true});
 
+
+// *******************************************************************************
+//                          middleware
+// *******************************************************************************
+function isLoggedIn(req,res,next){
+    if(req.isAuthenticated()){
+        return next();
+    }
+    else{
+        res.redirect("/login")
+    }
+}
+app.use(function(req,res,next){
+    res.locals.currentUser = req.user;
+    next();
+});
+
 app.get("/",(req,res) => {
     res.render("homepage");
 });
@@ -39,7 +56,7 @@ app.get("/",(req,res) => {
 // *******************************************************************************
 
 //INDEX - show all campgrounds
-app.get("/campgrounds",(req,res) => {
+app.get("/campgrounds",(req,res) => {    
     Campground.find({},function(err,allCampgrounds){
         if(err){
             console.log(err);
@@ -164,19 +181,6 @@ app.get("/logout",function(req,res){
     req.logout();
     res.redirect("/campgrounds")
 });
-
-
-// *******************************************************************************
-//                          middleware
-// *******************************************************************************
-function isLoggedIn(req,res,next){
-    if(req.isAuthenticated()){
-        return next();
-    }
-    else{
-        res.redirect("/login")
-    }
-}
 
 // *******************************************************************************
 //                          Error routes and port config
