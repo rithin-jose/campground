@@ -2,15 +2,31 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var express = require('express');
 var app = express();
+var passport = require('passport')
+var LocalStratergy = require('passport-local')
 
 var Campground = require('./models/campground');
 var Comment = require('./models/comment');
+var User = require('./models/user');
 var seedDB = require('./seeds');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname+'/public'));
 app.set('view engine','ejs');
 seedDB();
+
+//Passport config
+app.use(require('express-session')({
+    secret:"The secret is used to hash the session with HMAC, So you can put anything in here.",
+    resave: false,
+    saveUninitialized: false
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStratergy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 mongoose.connect("mongodb://localhost/campground",{useNewUrlParser: true, useUnifiedTopology: true});
 
@@ -110,6 +126,23 @@ app.post("/campgrounds/:id/comments",function(req,res){
         }
     });
 });
+
+//Authentication Routes
+app.get("/register",function(req,res){
+    res.render('register');
+});
+app.post("/register",function(req,res){
+    User.register(new User({username: req.body.username}),req.body.password,function(err,user){
+        if(err){
+            console.log(err);
+            return res.render("register");
+        }
+        passport.authenticate("local")(req,res,function(){
+            res.redirect("/campgrounds");
+        });
+    });});
+
+
 
 
 app.get("*",(req,res) => {
