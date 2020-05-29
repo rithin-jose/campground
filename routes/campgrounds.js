@@ -3,7 +3,7 @@ var router = express.Router();
 var Campground = require("../models/campground");
 
 //INDEX - show all campgrounds
-router.get("/campgrounds",(req,res) => {    
+router.get("/",(req,res) => {    
     Campground.find({},function(err,allCampgrounds){
         if(err){
             console.log(err);
@@ -16,7 +16,7 @@ router.get("/campgrounds",(req,res) => {
 });
 
 //CREATE - add new campgrounds to DB
-router.post("/campgrounds",isLoggedIn,(req,res) => {
+router.post("/",isLoggedIn,(req,res) => {
     //adding to array
     var name = req.body.name;
     var image = req.body.image;
@@ -40,12 +40,12 @@ router.post("/campgrounds",isLoggedIn,(req,res) => {
 });
 
 //New - Show form to createnew campground
-router.get("/campgrounds/new",isLoggedIn,(req,res) => {
+router.get("/new",isLoggedIn,(req,res) => {
     res.render("campgrounds/new.ejs")
 });
 
 //Show - shows info about one campground
-router.get("/campgrounds/:id",function(req,res){
+router.get("/:id",function(req,res){
     //find ground with the id and render show teplate with the details
     Campground.findById(req.params.id).populate("comments").exec(function(err,foundCampground){
         if(err){
@@ -59,6 +59,40 @@ router.get("/campgrounds/:id",function(req,res){
     });
 });
 
+//Edit Campgrounds Route
+router.get('/:id/edit',function(req,res){
+    Campground.findById(req.params.id, function(err,foundCampground){
+        if(err){
+            res.redirect("/campgrounds");
+        }else{
+            res.render("campgrounds/edit",{campground:foundCampground});
+        }
+    })
+
+});
+//Update Campgrounds Route
+router.put('/:id/edit',function(req,res){
+    Campground.findByIdAndUpdate(req.params.id, req.body.campground ,function(err,updatedCampground){
+        if(err){
+            res.redirect("/campgrounds");
+        }else{
+            res.redirect("/campgrounds/"+req.params.id);
+        }
+    })
+
+});
+
+//Destroy Campgrounds Route
+router.delete('/:id',function(req,res){
+    Campground.findByIdAndRemove(req.params.id,function(err){
+        if(err){
+            res.redirect("/campgrounds");
+        }else{
+            res.redirect("/campgrounds");
+        }
+    })
+
+});
 // middleware
 function isLoggedIn(req,res,next){
     if(req.isAuthenticated()){
