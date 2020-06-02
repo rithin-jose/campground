@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
-var User = require('../models/user') 
+var User = require('../models/user') ;
 
 //Root Route
 router.get("/",(req,res) => {
@@ -16,9 +16,11 @@ router.post("/register",function(req,res){
     User.register(new User({username: req.body.username}),req.body.password,function(err,user){
         if(err){
             console.log(err);
-            return res.render("register");
+            req.flash("error",err.message);
+            res.redirect("register");
         }
         passport.authenticate("local")(req,res,function(){
+            req.flash("success","Welcome to Campground " +user.username);
             res.redirect("/campgrounds");
         });
     });
@@ -40,17 +42,8 @@ router.post("/login",passport.authenticate("local",
 // Logout route
 router.get("/logout",function(req,res){
     req.logout();
+    req.flash("success","Logged you out")
     res.redirect("/campgrounds")
 });
-
-//middleware
-function isLoggedIn(req,res,next){
-    if(req.isAuthenticated()){
-        return next();
-    }
-    else{
-        res.redirect("/login")
-    }
-}
 
 module.exports = router;
