@@ -48,12 +48,12 @@ router.get("/new",middleware.isLoggedIn,(req,res) => {
 router.get("/:id",function(req,res){
     //find ground with the id and render show teplate with the details
     Campground.findById(req.params.id).populate("comments").exec(function(err,foundCampground){
-        if(err){
-            console.log(err);
+        if(err || !foundCampground){
+            console.log(err); 
+            req.flash("error","Campground not found");
+            res.redirect("back");           
         }
         else{
-            console.log("found");
-            
             res.render("campgrounds/show",{campground:foundCampground});
         }
     });
