@@ -23,6 +23,8 @@ app.use(flash());
 // uncomment to seed the DB
 // seedDB();
 
+
+
 //Passport config
 app.use(require('express-session')({
     secret:"The secret is used to hash the session with HMAC, So you can put anything in here.",
@@ -42,6 +44,7 @@ app.use(function(req,res,next){
     res.locals.currentUser = req.user;
     res.locals.error = req.flash("error");
     res.locals.success = req.flash("success");
+    res.locals.moment = require('moment');
     next();
 });
 

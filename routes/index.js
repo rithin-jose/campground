@@ -13,7 +13,11 @@ router.get("/register",function(req,res){
     res.render('register');
 });
 router.post("/register",function(req,res){
-    User.register(new User({username: req.body.username}),req.body.password,function(err,user){
+    var newUser = new User({username: req.body.username});
+    if(req.body.code === "secretcode123"){
+        newUser.admin = true;
+    }
+    User.register(newUser,req.body.password,function(err,user){
         if(err){
             console.log(err);
             req.flash("error",err.message);
@@ -35,7 +39,9 @@ router.get("/login",function(req,res){
 router.post("/login",passport.authenticate("local",
     {
         successRedirect: "/campgrounds",
-        failureRedirect: "/login"
+        failureRedirect: "/login",
+        failureFlash: true,
+        successFlash:"Welcome to Campground"
     }),function(req,res){
 });
 
@@ -45,5 +51,4 @@ router.get("/logout",function(req,res){
     req.flash("success","Logged you out")
     res.redirect("/campgrounds")
 });
-
 module.exports = router;

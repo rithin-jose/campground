@@ -12,7 +12,7 @@ middlewareObj.checkCampgroundOwnership = function(req,res,next){
             }else{
                 
                     //mongoose obj              //string              
-                if(foundCampground.author.id.equals(req.user._id)){
+                if((foundCampground.author.id.equals(req.user._id)) || req.user.admin){
                     next();
                 }else{
                     req.flash("error","You Dont have Permission to do that!");
@@ -34,7 +34,7 @@ middlewareObj.checkCommentsOwnership = function(req,res,next){
                 res.redirect("back");
             }else{
                     //mongoose obj              //string              
-                if(foundComment.author.id.equals(req.user._id)){
+                if((foundComment.author.id.equals(req.user._id)) || req.user.admin){
                     next();
                 }else{
                     req.flash("error","Login First")
