@@ -20,7 +20,7 @@ app.use(express.static(__dirname+'/public'));
 app.set('view engine','ejs');
 app.use(methodOverride('_method'));
 app.use(flash());
-// uncomment to seed the DB
+// // To seed the DB
 // seedDB();
 
 
