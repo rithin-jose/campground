@@ -1,3 +1,12 @@
+require('dotenv').config();
+const db = {
+    host:process.env.DB_HOST,
+    user:process.env.DB_USER,
+    pass:process.env.DB_PASS
+}
+//global configs
+
+
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var express = require('express');
@@ -38,8 +47,13 @@ passport.use(new LocalStratergy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-mongoose.connect("mongodb://localhost/campground",{useNewUrlParser: true, useUnifiedTopology: true,useFindAndModify: false});
-
+// mongoose.connect("mongodb://localhost/campground",{useNewUrlParser: true, useUnifiedTopology: true,useFindAndModify: false});
+mongoose.connect(`${db.host}://${db.user}:${db.pass}@cluster0.i4w7b.mongodb.net/<dbname>?retryWrites=true&w=majority`,{useNewUrlParser: true, useUnifiedTopology: true,useFindAndModify: false})
+    .then(() =>{
+        console.log("connected to db");
+    }).catch(err => {
+        console.log('Error:',err.message);
+    })
 app.use(function(req,res,next){
     res.locals.currentUser = req.user;
     res.locals.error = req.flash("error");
