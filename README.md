@@ -27,5 +27,5 @@ To automate the server to handle changes use [nodemon](https://www.npmjs.com/pac
 
 ## License
 
-court-management-system.cpp is licensed under [GNU Lesser General Public License v3.0](https://github.com/rithin-jose/campground/blob/master/LICENSE.md)
+Campground is licensed under [GNU Lesser General Public License v3.0](https://github.com/rithin-jose/campground/blob/master/LICENSE.md)
 
